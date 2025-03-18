@@ -89,8 +89,8 @@ namespace BubbleClock
             // Load config
             this.config.LoadConfig();
 
-            this.Name = "BubbleClock";
-            this.Text = "BubbleClock Screen Saver";
+            this.Name = "BubbleClockPro";
+            this.Text = "BubbleClockPro Screen Saver";
             this.FormBorderStyle = FormBorderStyle.None;        // 无边框
             this.WindowState = FormWindowState.Maximized;       // 最大化窗口
             this.StartPosition = FormStartPosition.CenterScreen; // 居中显示

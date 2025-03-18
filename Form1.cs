@@ -13,8 +13,8 @@ namespace BubbleClock
         public ConfigForm()
         {
             InitializeComponent();
-            //InitializeUI();
-            InitializeAbout();
+            InitializeUI();
+            //InitializeAbout();
         }
 
         private void InitializeComponent()
@@ -27,8 +27,8 @@ namespace BubbleClock
             // 
             this.Icon = (Icon?)resources.GetObject("$this.Icon");
             this.ClientSize = new Size(600, 400);
-            this.Name = "Bubble Clock Settings";
-            this.Text = "Bubble Clock Settings";
+            this.Name = "Bubble Clock Pro Settings";
+            this.Text = "Bubble Clock Pro Settings";
             this.Font = new Font("Arial", 9, FontStyle.Regular); // 设置默认字体
             this.AutoScaleMode = AutoScaleMode.Font;
 

@@ -18,7 +18,7 @@ namespace BubbleClock
             public UInt32 minuteColor = 0x00529EE8; // 淡蓝色
             public UInt32 secondColor = 0x00FFFFFF; // 白色
             public string fontName = "Arial Rounded MT Bold";
-            public bool secondJump = false;
+            public bool secondJump = true;
             public bool floatingEffect = true;
             public bool backgroundRandom = true;
             public bool fontRandom = true;
@@ -29,7 +29,7 @@ namespace BubbleClock
             try
             {
                 // 打开或创建注册表项
-                RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\BubbleClock", true);
+                RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"Software\BubbleClockPro", true);
 
                 if (key == null)
                 {
@@ -62,7 +62,7 @@ namespace BubbleClock
             try
             {
                 // 打开或创建注册表项
-                RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\BubbleClock");
+                RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\BubbleClockPro");
 
                 // 存储配置
                 key.SetValue("BackgroundColor", options.backgroundColor);
