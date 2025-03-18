@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BubbleClock": {
+      "commandName": "Project",
+      "commandLineArgs": "/c"
+    }
+  }
+}
