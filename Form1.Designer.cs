@@ -201,10 +201,7 @@ namespace BubbleClock
 
             using (Font font = new Font(options.fontName, this.ClientSize.Height/2, FontStyle.Bold))
             {
-                List<Color> colors = new List<Color>();
-                colors.Add(config.GetHouColor(180));
-                colors.Add(config.GetMinuteColor(180));
-                colors.Add(config.GetSecondColor(200));
+                var colors = config.GetFontColorAlpha(now.Hour);
 
                 // Draw the "hour" and "minute" with pink gradient
                 for ( int i = 0; i < 4; i++)

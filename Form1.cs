@@ -26,7 +26,7 @@ namespace BubbleClock
             // ConfigForm
             // 
             this.Icon = (Icon?)resources.GetObject("$this.Icon");
-            this.ClientSize = new Size(600, 600);
+            this.ClientSize = new Size(500, 800);
             this.Name = "Bubble Clock Pro Settings";
             this.Text = "Bubble Clock Pro Settings";
             this.Font = new Font("Arial", 9, FontStyle.Regular); // 设置默认字体
@@ -121,7 +121,7 @@ namespace BubbleClock
             var topLayout = new TableLayoutPanel
             {
                 ColumnCount = 2,
-                RowCount = 20,
+                RowCount = 21,
                 Dock = DockStyle.Fill,
             };
 
@@ -132,7 +132,7 @@ namespace BubbleClock
             {
                 Text = "Background Color",
                 Margin = new Padding(30, 10, 0, 0),
-                AutoSize = true
+                Size = new Size(200, 40)
             };
 
             var backgroundColorDisplayPanel = new Panel
@@ -143,7 +143,9 @@ namespace BubbleClock
 
             backgroundColorDisplayPanel.Click += (s, e) =>
             {
-                var dialog = new ColorDialog();
+                var dialog = new ColorDialog {
+                    Color = config.GetBackgroundColor()
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     backgroundColorDisplayPanel.BackColor = dialog.Color;
@@ -158,7 +160,7 @@ namespace BubbleClock
             {
                 Text = "Hours Color",
                 Margin = new Padding(30, 5, 0, 0),
-                AutoSize = true
+                Size = new Size(200, 40),
             };
 
             var hourColorDisplayPanel = new Panel
@@ -169,7 +171,9 @@ namespace BubbleClock
 
             hourColorDisplayPanel.Click += (s, e) =>
             {
-                var dialog = new ColorDialog();
+                var dialog = new ColorDialog { 
+                    Color = config.GetHouColor()
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     hourColorDisplayPanel.BackColor = dialog.Color;
@@ -184,7 +188,7 @@ namespace BubbleClock
             {
                 Text = "Minute Color",
                 Margin = new Padding(30, 5, 0, 0),
-                AutoSize = true
+                Size = new Size(200, 40)
             };
 
             var minuteColorDisplayPanel = new Panel
@@ -195,7 +199,9 @@ namespace BubbleClock
 
             minuteColorDisplayPanel.Click += (s, e) =>
             {
-                var dialog = new ColorDialog();
+                var dialog = new ColorDialog { 
+                    Color = config.GetMinuteColor()
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     minuteColorDisplayPanel.BackColor = dialog.Color;
@@ -210,7 +216,7 @@ namespace BubbleClock
             {
                 Text = "Second Color",
                 Margin = new Padding(30, 5, 0, 0),
-                AutoSize = true
+                Size = new Size(200, 40)
             };
 
             var secondColorDisplayPanel = new Panel
@@ -221,7 +227,10 @@ namespace BubbleClock
 
             secondColorDisplayPanel.Click += (s, e) =>
             {
-                var dialog = new ColorDialog();
+                var dialog = new ColorDialog {
+                    Color = config.GetSecondColor()
+                };
+
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     secondColorDisplayPanel.BackColor = dialog.Color;
@@ -235,7 +244,7 @@ namespace BubbleClock
             var fontLabel = new Label
             {
                 Text = "Font Style",
-                AutoSize = true,
+                Size = new Size(200, 40),
                 Margin = new Padding(30, 5, 0, 0)
             };
 
@@ -249,7 +258,9 @@ namespace BubbleClock
 
             fontButton.Click += (s, e) =>
             {
-                var dialog = new FontDialog();
+                var dialog = new FontDialog { 
+                    Font = new Font(options.fontName, 9, FontStyle.Regular) // 默认字体
+                }; 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     //Properties.Settings.Default.Font = dialog.Font;
@@ -288,7 +299,7 @@ namespace BubbleClock
                     flashSpeedComboBox.SelectedIndex = i;
                     break;
                 }
-            }            
+            }
             flashSpeedComboBox.SelectedIndexChanged += (s, e) =>
             {
                 string value = (string)flashSpeedComboBox.SelectedItem;
@@ -344,13 +355,106 @@ namespace BubbleClock
 
             topLayout.Controls.Add(floatingSizeLabel);
             topLayout.Controls.Add(floatingSizeNumericUpDown);
-            
-            
+
+            var fontAlphaLabel = new Label
+            {
+                Text = "Font Alpha",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var fontAlphaNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 100,
+                Value = options.fontAlpha
+            };
+
+            fontAlphaNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.fontAlpha = (UInt32)fontAlphaNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(fontAlphaLabel);
+            topLayout.Controls.Add(fontAlphaNumericUpDown);
+
+            var secondAlphaLabel = new Label
+            {
+                Text = "Second Alpha",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var secondAlphaNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 100,
+                Value = options.SecondAlpha
+            };
+
+            secondAlphaNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.SecondAlpha = (UInt32)secondAlphaNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(secondAlphaLabel);
+            topLayout.Controls.Add(secondAlphaNumericUpDown);
+
+            // Select Font Color Range
+
+            var fontLayout = new TableLayoutPanel
+            {
+                ColumnCount = 5,
+                RowCount = 2,
+                Dock = DockStyle.Fill,
+            };
+
+            var fontRandomColorLabel = new Label
+            {
+                Text = "Font Random Color Range",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+
+            List<Panel> displayPanels = new List<Panel>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                int index = i; // 拷贝引用
+                displayPanels.Add(new Panel
+                {
+                    Size = new Size(40, 40),
+                    BackColor = config.GetFontColor(index),
+                });
+
+                displayPanels[index].Click += (s, e) =>
+                {
+                    var dialog = new ColorDialog
+                    {
+                        Color = config.GetFontColor(index),
+                    };
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        displayPanels[index].BackColor = dialog.Color;
+                        config.SetFontColor(index, dialog.Color);
+                    }
+                };
+
+                fontLayout.Controls.Add(displayPanels[index]);
+            }
+
+            topLayout.Controls.Add(fontRandomColorLabel);
+            topLayout.Controls.Add(fontLayout);
 
             var checkBox1 = new CheckBox
             {
                 Text = "Floating Effect",
-                AutoSize = true,
+                Size = new Size(200, 40),
                 Margin = new Padding(30, 5, 0, 0),
                 Checked = options.floatingEffect,
             };
@@ -362,9 +466,9 @@ namespace BubbleClock
 
             var checkBox2 = new CheckBox
             {
-                Text = "Seconds Jump Effect",
-                AutoSize = true,
-                Margin = new Padding(0, 5, 10, 0),
+                Text = "Seconds Jump",
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
                 Checked = options.secondJump,
             };
 
@@ -376,7 +480,7 @@ namespace BubbleClock
             var checkBox3 = new CheckBox
             {
                 Text = "Random Font Color",
-                AutoSize = true,
+                Size = new Size(200, 40),
                 Margin = new Padding(30, 5, 0, 0),
                 Checked = options.fontRandom,
             };
@@ -389,8 +493,8 @@ namespace BubbleClock
             var checkBox4 = new CheckBox
             {
                 Text = "Random Backgound Color",
-                AutoSize = true,
-                Margin = new Padding(0, 5, 10, 0),
+                Size = new Size(250, 40),
+                Margin = new Padding(0, 5, 0, 0),
                 Checked = options.backgroundRandom,
             };
 
