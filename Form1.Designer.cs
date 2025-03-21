@@ -14,7 +14,7 @@ namespace BubbleClock
 
         private System.Windows.Forms.Timer timer;
 
-        private float amplitude = 20; // 漂浮幅度
+        //private float amplitude = 30; // 漂浮幅度
         private Random random = new Random(); // 使用系统时间作为种子
 
         // 每个数字的中心点坐标
@@ -55,6 +55,7 @@ namespace BubbleClock
 
         private void FloatingTexts()
         {
+            float amplitude = config.options.floatingSize;
             for (int i = 0; i < floatingTexts.Count; i++ )
             {
                 floatingTexts[i].angleX += floatingTexts[i].speedX;
@@ -145,7 +146,7 @@ namespace BubbleClock
 
             // 初始化计时器
             timer = new System.Windows.Forms.Timer();
-            timer.Interval = 50; // 每 20ms 更新一次
+            timer.Interval = (1000/(int)(config.options.flashSpeed)); // 每 xx ms 更新一次
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -262,124 +263,6 @@ namespace BubbleClock
                 }
             }
         }
-
-        //private void DrawClock1(Graphics g)
-        //{
-        //    // 设置高质量渲染
-        //    g.SmoothingMode = SmoothingMode.AntiAlias;
-        //    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        //    g.TextRenderingHint = TextRenderingHint.AntiAlias;
-
-        //    // 使用纯色填充背景
-        //    using (SolidBrush brush = new SolidBrush(Color.FromArgb(30, 30, 30)))
-        //    {
-        //        g.FillRectangle(brush, this.ClientRectangle);
-        //    }
-
-        //    // 获取当前时间
-        //    DateTime now = DateTime.Now;
-
-        //    // 绘制时钟表盘
-        //    using (Pen pen = new Pen(Color.White, 5))
-        //    {
-        //        g.DrawEllipse(pen, centerX - clockRadius, centerY - clockRadius, clockRadius * 2, clockRadius * 2);
-        //    }
-
-        //    // 绘制时钟刻度和数字
-        //    for (int i = 0; i < 60; i++)
-        //    {
-        //        double angle = i * 6 * Math.PI / 180; // 每个刻度 6 度
-                
-        //        // 绘制刻度
-        //        int innerLength = (i % 5 == 0) ? 40 : 30; // 每 5 个刻度长一些
-        //        Point p1 = new Point(
-        //            (int)(centerX + (clockRadius - 10) * Math.Cos(angle)),
-        //            (int)(centerY + (clockRadius - 10) * Math.Sin(angle))
-        //        );
-        //        Point p2 = new Point(
-        //            (int)(centerX + (clockRadius - innerLength) * Math.Cos(angle)),
-        //            (int)(centerY + (clockRadius - innerLength) * Math.Sin(angle))
-        //        );
-                
-        //        // 主刻度用粗线，秒刻度用细线
-        //        using (Pen scalePen = new Pen(Color.White, i % 5 == 0 ? 5 : 2))
-        //        {
-        //            g.DrawLine(scalePen, p1, p2);
-        //        }
-
-        //        // 绘制数字（每5个刻度画一个数字）
-        //        if (i % 5 == 0)
-        //        {
-        //            int number = (i / 5) + 3;
-        //            if (number > 12)
-        //            {
-        //                number = number - 12;
-        //            }
-        //            string numberText = number.ToString();
-                    
-        //            // 计算数字位置（稍微向内移动一些）
-        //            float numberRadius = clockRadius - 100; // 数字位置的半径
-        //            PointF numberPos = new PointF(
-        //                centerX + numberRadius * (float)Math.Cos(angle) - 25,
-        //                centerY + numberRadius * (float)Math.Sin(angle) - 25
-        //            );
-
-        //            // 使用更大的字体绘制数字
-        //            using (Font numberFont = new Font("Segoe UI", 50, FontStyle.Bold))
-        //            using (SolidBrush textBrush = new SolidBrush(Color.White))
-        //            {
-        //                // 测量文本大小以实现居中
-        //                SizeF textSize = g.MeasureString(numberText, numberFont);
-        //                numberPos.X += (50 - textSize.Width) / 2;
-        //                numberPos.Y += (50 - textSize.Height) / 2;
-                        
-        //                g.DrawString(numberText, numberFont, textBrush, numberPos);
-        //            }
-        //        }
-        //    }
-
-        //    // 直接使用之前定义的 now 变量
-        //    double hour = (double)now.Hour % 12;
-        //    double minute = (double)now.Minute;
-        //    double second = (double)now.Second;
-        //    double millisecond = (double)now.Millisecond;
-
-        //    // 绘制时针
-        //    double hourAngle = (hour * 30 + minute * 0.5) * Math.PI / 180;
-        //    Point hourEnd = new Point(
-        //        (int)(centerX + clockRadius * 0.5 * Math.Cos(hourAngle - Math.PI / 2)),
-        //        (int)(centerY + clockRadius * 0.5 * Math.Sin(hourAngle - Math.PI / 2))
-        //    );
-        //    using (Pen hourPen = new Pen(Color.White, 15))
-        //    {
-        //        g.DrawLine(hourPen, center, hourEnd);
-        //    }
-
-        //    // 绘制分针
-        //    double minuteAngle = (minute * 6 + second * 0.1) * Math.PI / 180;
-        //    Point minuteEnd = new Point(
-        //        (int)(centerX + clockRadius * 0.7 * Math.Cos(minuteAngle - Math.PI / 2)),
-        //        (int)(centerY + clockRadius * 0.7 * Math.Sin(minuteAngle - Math.PI / 2))
-        //    );
-        //    using (Pen minutePen = new Pen(Color.White, 10))
-        //    {
-        //        g.DrawLine(minutePen, center, minuteEnd);
-        //    }
-
-        //    // 绘制秒针
-        //    double secondAngle = (second + (millisecond / 1000)) * 6 * Math.PI / 180;
-        //    Point secondEnd = new Point(
-        //        (int)(centerX + clockRadius * 0.95 * Math.Cos(secondAngle - Math.PI / 2)),
-        //        (int)(centerY + clockRadius * 0.95 * Math.Sin(secondAngle - Math.PI / 2))
-        //    );
-        //    using (Pen secondPen = new Pen(Color.FromArgb(255, 0, 0), 5))
-        //    {
-        //        g.DrawLine(secondPen, center, secondEnd);
-        //    }
-
-        //    // 绘制中心点
-        //    g.FillEllipse(Brushes.White, center.X - 5, center.Y - 5, 10, 10);
-        //}
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {

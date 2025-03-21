@@ -26,7 +26,7 @@ namespace BubbleClock
             // ConfigForm
             // 
             this.Icon = (Icon?)resources.GetObject("$this.Icon");
-            this.ClientSize = new Size(600, 400);
+            this.ClientSize = new Size(600, 600);
             this.Name = "Bubble Clock Pro Settings";
             this.Text = "Bubble Clock Pro Settings";
             this.Font = new Font("Arial", 9, FontStyle.Regular); // 设置默认字体
@@ -121,7 +121,7 @@ namespace BubbleClock
             var topLayout = new TableLayoutPanel
             {
                 ColumnCount = 2,
-                RowCount = 8,
+                RowCount = 20,
                 Dock = DockStyle.Fill,
             };
 
@@ -261,6 +261,91 @@ namespace BubbleClock
 
             topLayout.Controls.Add(fontLabel);
             topLayout.Controls.Add(fontButton);
+
+            var flashSpeedLabel = new Label
+            {
+                Text = "Flash Speed",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var flashSpeedComboBox = new ComboBox
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            flashSpeedComboBox.Items.AddRange(new object[] { "10 Hz", "20 Hz", "30 Hz", "60 Hz", "120 Hz" });
+            flashSpeedComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            flashSpeedComboBox.SelectedIndex = 0;
+            for (int i = 0; i < flashSpeedComboBox.Items.Count; i++)
+            {
+                string item = (string)flashSpeedComboBox.Items[i];
+                var value = options.flashSpeed.ToString();
+                if (item.IndexOf(value) == 0)
+                {
+                    flashSpeedComboBox.SelectedIndex = i;
+                    break;
+                }
+            }            
+            flashSpeedComboBox.SelectedIndexChanged += (s, e) =>
+            {
+                string value = (string)flashSpeedComboBox.SelectedItem;
+                if (value.IndexOf("10") == 0)
+                {
+                    options.flashSpeed = 10;
+                }
+                else if (value.IndexOf("20") == 0)
+                {
+                    options.flashSpeed = 20;
+                }
+                else if (value.IndexOf("30") == 0)
+                {
+                    options.flashSpeed = 30;
+                }
+                else if (value.IndexOf("60") == 0)
+                {
+                    options.flashSpeed = 60;
+                }
+                else if (value.IndexOf("120") == 0)
+                {
+                    options.flashSpeed = 120;
+                }
+                else
+                {
+                    options.flashSpeed = 10;
+                }
+            };
+
+            topLayout.Controls.Add(flashSpeedLabel);
+            topLayout.Controls.Add(flashSpeedComboBox);
+
+            var floatingSizeLabel = new Label
+            {
+                Text = "Floating Size",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var floatingSizeNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 100,
+                Value = options.floatingSize
+            };
+
+            floatingSizeNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.floatingSize = (UInt32)floatingSizeNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(floatingSizeLabel);
+            topLayout.Controls.Add(floatingSizeNumericUpDown);
+            
+            
 
             var checkBox1 = new CheckBox
             {

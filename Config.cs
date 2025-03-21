@@ -22,6 +22,10 @@ namespace BubbleClock
             public bool floatingEffect = true;
             public bool backgroundRandom = true;
             public bool fontRandom = true;
+
+            public UInt32 flashSpeed = 120; // 120 Hz
+            public UInt32 floatingSize = 30; // size of floating effect
+
         }
 
         public string LoadConfig()
@@ -46,6 +50,8 @@ namespace BubbleClock
                 options.floatingEffect = Convert.ToBoolean(key.GetValue("FloatingEffect", options.floatingEffect));
                 options.backgroundRandom = Convert.ToBoolean(key.GetValue("BackgroundRandom", options.backgroundRandom));
                 options.fontRandom = Convert.ToBoolean(key.GetValue("FontRandom", options.fontRandom));
+                options.flashSpeed = Convert.ToUInt32(key.GetValue("FlashSpeed", options.flashSpeed));
+                options.floatingSize = Convert.ToUInt32(key.GetValue("FloatingSize", options.floatingSize));
 
                 key.Close();
                 return "";
@@ -74,6 +80,8 @@ namespace BubbleClock
                 key.SetValue("FloatingEffect", options.floatingEffect);
                 key.SetValue("BackgroundRandom", options.backgroundRandom);
                 key.SetValue("FontRandom", options.fontRandom);
+                key.SetValue("FlashSpeed", options.flashSpeed);
+                key.SetValue("FloatingSize", options.floatingSize);
 
                 key.Close();
             }

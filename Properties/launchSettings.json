@@ -2,7 +2,6 @@
   "profiles": {
     "BubbleClockPro": {
       "commandName": "Project",
-      "commandLineArgs": "/c"
     },
     "BubbleClockPro Config": {
       "commandName": "Project",
