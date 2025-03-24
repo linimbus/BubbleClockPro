@@ -16,10 +16,33 @@ namespace BubbleClock
 
         private Random random = new Random(); // 使用系统时间作为种子
 
-        private UInt32 milisecond = 0;
+        private UInt32 interval = 0;
 
         // 每个数字的中心点坐标
         private List<Point> centers = new List<Point>();
+
+        private List<double> numberJumps = new List<double> {
+                0.00048852,
+                0.00097704,
+                0.001954079,
+                0.003908158,
+                0.007816317,
+                0.015632633,
+                0.031265266,
+                0.062530532,
+                0.125061065,
+                0.25012213,
+                0.50024426,
+                0.75036639,
+                0.875427455,
+                0.937957987,
+                0.969223254,
+                0.984855887,
+                0.992672203,
+                0.996580362,
+                0.998534441,
+                0.99951148,
+                1};
 
         private class FloatingText
         {
@@ -106,7 +129,7 @@ namespace BubbleClock
             this.KeyPress += Form1_KeyPress;
             this.MouseMove += Form1_MouseMove;
             this.MouseClick += Form1_MouseClick;
-            //this.DoubleBuffered = true; // 启用双缓冲减少闪烁
+            this.DoubleBuffered = true; // 启用双缓冲减少闪烁
 
             // 添加以下代码确保窗体重绘
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -147,7 +170,7 @@ namespace BubbleClock
 
             // 初始化计时器
             timer = new System.Windows.Forms.Timer();
-            timer.Interval = 10; // 每 xx ms 更新一次
+            timer.Interval = 1000 / (int)config.options.flashSpeed; // 每 xx ms 更新一次
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -173,10 +196,10 @@ namespace BubbleClock
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            DrawClock2(e.Graphics);
+            DrawClock(e.Graphics);
         }
 
-        private void DrawClock2(Graphics g)
+        private void DrawClock(Graphics g)
         {
             var options = this.config.options;
 
@@ -185,7 +208,7 @@ namespace BubbleClock
                 FloatingTexts();
             }
 
-            milisecond = (milisecond + 10) % 1000;
+            interval = (interval + 1) % 1000;
 
             // 设置高质量渲染
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -211,14 +234,14 @@ namespace BubbleClock
                 // Draw the "hour" and "minute" with pink gradient
                 for ( int i = 0; i < 4; i++) {
                     if (timeStringNext[i] != timeString[i]) {
-                        if(milisecond <= 200) 
+
+                        if (interval >= numberJumps.Count)
                         {
-                            offset1 = (float)(this.ClientSize.Height * (float)(milisecond) / 200.0);
+                            offset1 = (float)this.ClientSize.Height;
                         }
-                        if(200 < milisecond && milisecond <= 600)
+                        else
                         {
-                            double size = ((double)milisecond ) * 10 / 400;
-                            offset1 = (float)(this.ClientSize.Height) + (float)Math.Sin(size) * (float)options.floatingSize * ((float)10 - (float)size);
+                            offset1 = (float)this.ClientSize.Height * (float)numberJumps[(int)interval];
                         }
                     } 
 
@@ -309,7 +332,7 @@ namespace BubbleClock
 
             if (timeString.Equals(timeStringNext))
             {
-                milisecond = 0;
+                interval = 0;
             }
         }
 
