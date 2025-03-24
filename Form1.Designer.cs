@@ -14,8 +14,9 @@ namespace BubbleClock
 
         private System.Windows.Forms.Timer timer;
 
-        //private float amplitude = 30; // 漂浮幅度
         private Random random = new Random(); // 使用系统时间作为种子
+
+        private UInt32 milisecond = 0;
 
         // 每个数字的中心点坐标
         private List<Point> centers = new List<Point>();
@@ -55,7 +56,7 @@ namespace BubbleClock
 
         private void FloatingTexts()
         {
-            float amplitude = config.options.floatingSize;
+            float amplitude = config.options.floatingSize; // 漂浮幅度
             for (int i = 0; i < floatingTexts.Count; i++ )
             {
                 floatingTexts[i].angleX += floatingTexts[i].speedX;
@@ -105,7 +106,7 @@ namespace BubbleClock
             this.KeyPress += Form1_KeyPress;
             this.MouseMove += Form1_MouseMove;
             this.MouseClick += Form1_MouseClick;
-            this.DoubleBuffered = true; // 启用双缓冲减少闪烁
+            //this.DoubleBuffered = true; // 启用双缓冲减少闪烁
 
             // 添加以下代码确保窗体重绘
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -146,7 +147,7 @@ namespace BubbleClock
 
             // 初始化计时器
             timer = new System.Windows.Forms.Timer();
-            timer.Interval = (1000/(int)(config.options.flashSpeed)); // 每 xx ms 更新一次
+            timer.Interval = 10; // 每 xx ms 更新一次
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -184,6 +185,8 @@ namespace BubbleClock
                 FloatingTexts();
             }
 
+            milisecond = (milisecond + 10) % 1000;
+
             // 设置高质量渲染
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -198,14 +201,58 @@ namespace BubbleClock
             // 获取当前时间
             DateTime now = DateTime.Now;
             var timeString = now.ToString("HHmm");
+            var timeStringNext = now.AddSeconds(1).ToString("HHmm");
 
             using (Font font = new Font(options.fontName, this.ClientSize.Height/2, FontStyle.Bold))
             {
+                float offset1 = 0;
                 var colors = config.GetFontColorAlpha(now.Hour);
 
                 // Draw the "hour" and "minute" with pink gradient
-                for ( int i = 0; i < 4; i++)
-                {
+                for ( int i = 0; i < 4; i++) {
+                    if (timeStringNext[i] != timeString[i]) {
+                        if(milisecond <= 200) 
+                        {
+                            offset1 = (float)(this.ClientSize.Height * (float)(milisecond) / 200.0);
+                        }
+                        if(200 < milisecond && milisecond <= 600)
+                        {
+                            double size = ((double)milisecond ) * 10 / 400;
+                            offset1 = (float)(this.ClientSize.Height) + (float)Math.Sin(size) * (float)options.floatingSize * ((float)10 - (float)size);
+                        }
+                    } 
+
+                    if (offset1 > 0) {
+                        SizeF nextSize = g.MeasureString(timeStringNext[i].ToString(), font);
+ 
+                        using (LinearGradientBrush brushHour = new LinearGradientBrush(
+                            new Point(0, 0),
+                            new Point(0, this.Height),
+                            colors[i % 2], // Lighter pink
+                            colors[i % 2])) // Darker pink
+                        {
+                            //DrawPoint(g, centers[i].X, centers[i].Y, 10, Color.Wheat);
+
+                            // Get the center of the form
+                            float centerX = floatingTexts[i].offsetX + centers[i].X;
+                            float centerY = floatingTexts[i].offsetY + centers[i].Y + (float)this.ClientSize.Height - offset1;
+
+                            //DrawPoint(g, centerX, centerY, 10, Color.Blue);
+
+                            float angleY = floatingTexts[i].angleY;
+
+                            g.TranslateTransform(centerX, centerY); // 将原点移动到绘画中心
+
+                            g.RotateTransform(3 * (float)Math.Sin(angleY));
+
+                            g.TranslateTransform(-(nextSize.Width / 2), -(nextSize.Height / 2));
+                            g.DrawString(timeStringNext[i].ToString(), font, brushHour, 0, 100);
+
+                            // 恢复画布的原始状态
+                            g.ResetTransform();
+                        }
+                    } 
+
                     SizeF textSize = g.MeasureString(timeString[i].ToString(), font);
                     var fontWidth = textSize.Width;
                     var fontHeight = textSize.Height;
@@ -220,7 +267,7 @@ namespace BubbleClock
 
                         // Get the center of the form
                         float centerX = floatingTexts[i].offsetX + centers[i].X;
-                        float centerY = floatingTexts[i].offsetY + centers[i].Y;
+                        float centerY = floatingTexts[i].offsetY + centers[i].Y - offset1;
 
                         //DrawPoint(g, centerX, centerY, 10, Color.Blue);
 
@@ -231,11 +278,11 @@ namespace BubbleClock
                         g.RotateTransform(3 * (float)Math.Sin(angleY));
 
                         g.TranslateTransform(-(fontWidth / 2), -(fontHeight / 2));
-                        g.DrawString(timeString[i].ToString(), font, brushHour,  0, 100);
+                        g.DrawString(timeString[i].ToString(), font, brushHour, 0, 100);
 
                         // 恢复画布的原始状态
                         g.ResetTransform();
-                    }
+                    }          
                 }
 
                 if (now.Second % 2 == 0 || !options.secondJump)
@@ -258,6 +305,11 @@ namespace BubbleClock
                         g.DrawString(":", font, brushPoint, centerX - (fontWidth/2), centerY - (fontHeight/2));
                     }
                 }
+            }
+
+            if (timeString.Equals(timeStringNext))
+            {
+                milisecond = 0;
             }
         }
 
