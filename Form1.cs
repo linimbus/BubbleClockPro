@@ -14,7 +14,7 @@ namespace BubbleClock
         {
             InitializeComponent();
             InitializeUI();
-            //InitializeAbout();
+            // InitializeAbout();
         }
 
         private void InitializeComponent()
@@ -26,7 +26,7 @@ namespace BubbleClock
             // ConfigForm
             // 
             this.Icon = (Icon?)resources.GetObject("$this.Icon");
-            this.ClientSize = new Size(530, 700);
+            this.ClientSize = new Size(650, 850);
             this.Name = "Bubble Clock Pro Settings";
             this.Text = "Bubble Clock Pro Settings";
             this.Font = new Font("Arial", 9, FontStyle.Regular); // 设置默认字体
@@ -121,7 +121,7 @@ namespace BubbleClock
             var topLayout = new TableLayoutPanel
             {
                 ColumnCount = 2,
-                RowCount = 21,
+                RowCount = 23,
                 Dock = DockStyle.Fill,
             };
 
@@ -403,6 +403,79 @@ namespace BubbleClock
 
             topLayout.Controls.Add(secondAlphaLabel);
             topLayout.Controls.Add(secondAlphaNumericUpDown);
+
+            var numberHeightLabel = new Label
+            {
+                Text = "Number Height",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var numberHeightNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 200,
+                Value = options.NumberHeight
+            };
+
+            numberHeightNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.NumberHeight = (UInt32)numberHeightNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(numberHeightLabel);
+            topLayout.Controls.Add(numberHeightNumericUpDown);
+
+            var numberWidthLabel = new Label
+            {
+                Text = "Number Width",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var numberWidthNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 200,
+                Value = options.NumberWidth
+            };
+
+            numberWidthNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.NumberWidth = (UInt32)numberWidthNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(numberWidthLabel);
+            topLayout.Controls.Add(numberWidthNumericUpDown);
+
+
+            var numberSizeLabel = new Label
+            {
+                Text = "Number Size",
+                Size = new Size(200, 40),
+                Margin = new Padding(30, 5, 0, 0)
+            };
+
+            var numberSizeNumericUpDown = new NumericUpDown
+            {
+                Size = new Size(200, 40),
+                Margin = new Padding(0, 5, 0, 0),
+                Minimum = 1,
+                Maximum = 200,
+                Value = options.NumberSize
+            };
+
+            numberSizeNumericUpDown.ValueChanged += (s, e) =>
+            {
+                options.NumberSize = (UInt32)numberSizeNumericUpDown.Value;
+            };
+
+            topLayout.Controls.Add(numberSizeLabel);
+            topLayout.Controls.Add(numberSizeNumericUpDown);
 
             // Select Font Color Range
 

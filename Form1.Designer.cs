@@ -71,10 +71,13 @@ namespace BubbleClock
 
         private void InitializeCenters(int length)
         {
-            centers.Add(new Point((this.ClientSize.Width * 15) / 100, this.ClientSize.Height / 2));
-            centers.Add(new Point((this.ClientSize.Width * 35) / 100, this.ClientSize.Height / 2));
-            centers.Add(new Point((this.ClientSize.Width * 65) / 100, this.ClientSize.Height / 2));
-            centers.Add(new Point((this.ClientSize.Width * 85) / 100, this.ClientSize.Height / 2));
+            int height = (int)config.options.NumberHeight;
+            int width = (int)config.options.NumberWidth;
+
+            centers.Add(new Point((this.ClientSize.Width * 15 * width) / 10000, this.ClientSize.Height * height / 200));
+            centers.Add(new Point((this.ClientSize.Width * 35 * width) / 10000, this.ClientSize.Height * height / 200));
+            centers.Add(new Point((this.ClientSize.Width * 65 * width) / 10000, this.ClientSize.Height * height / 200));
+            centers.Add(new Point((this.ClientSize.Width * 85 * width) / 10000, this.ClientSize.Height * height / 200));
         }
 
         private void FloatingTexts()
@@ -226,7 +229,7 @@ namespace BubbleClock
             var timeString = now.ToString("HHmm");
             var timeStringNext = now.AddSeconds(1).ToString("HHmm");
 
-            using (Font font = new Font(options.fontName, this.ClientSize.Height/2, FontStyle.Bold))
+            using (Font font = new Font(options.fontName, this.ClientSize.Height * options.NumberSize/200, FontStyle.Bold))
             {
                 float offset1 = 0;
                 var colors = config.GetFontColorAlpha(now.Hour);

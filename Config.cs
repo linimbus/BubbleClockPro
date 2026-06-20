@@ -42,6 +42,10 @@ namespace BubbleClock
             public UInt32 fontAlpha = 70; // 70%
             public UInt32 SecondAlpha = 80; // 80%
 
+            public UInt32 NumberHeight = 100; // 数字高度调整系数
+            public UInt32 NumberWidth = 100; // 数字宽度调整系数
+            public UInt32 NumberSize = 100; // 数字大小调整系数
+
             public int lastHour = -1; // 上一次的小时数, 用于随机颜色
             public List<Color> fontColors = new List<Color>();
         }
@@ -83,6 +87,10 @@ namespace BubbleClock
                 options.fontAlpha = Convert.ToUInt32(key.GetValue("FontAlpha", options.fontAlpha));
                 options.SecondAlpha = Convert.ToUInt32(key.GetValue("SecondAlpha", options.SecondAlpha));
 
+                options.NumberHeight = Convert.ToUInt32(key.GetValue("NumberHeight", options.NumberHeight));
+                options.NumberWidth = Convert.ToUInt32(key.GetValue("NumberWidth", options.NumberWidth));
+                options.NumberSize = Convert.ToUInt32(key.GetValue("NumberSize", options.NumberSize));
+
                 key.Close();
 
                 FontColorListInit();
@@ -122,6 +130,10 @@ namespace BubbleClock
 
                 key.SetValue("FontAlpha", options.fontAlpha);
                 key.SetValue("SecondAlpha", options.SecondAlpha);
+
+                key.SetValue("NumberHeight", options.NumberHeight);
+                key.SetValue("NumberWidth", options.NumberWidth);
+                key.SetValue("NumberSize", options.NumberSize);
 
                 key.Close();
             }
